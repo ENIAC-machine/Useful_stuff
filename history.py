@@ -7,6 +7,9 @@ from typing import Union, List
 from utils import *
 from base import GETError, agg_info
 
+
+#TODO: add assert statements for argument debugging
+
 def history(sec: Union[str, list, np.ndarray],
             engine: Union[str, list, np.ndarray]='stock',
             market: Union[str, list, np.ndarray]='shares',
@@ -142,6 +145,9 @@ def trading_listing(engine:Union[str, List[str], np.ndarray]='stock', market:Uni
     
     '''
 
+
+    check_connection()
+
     assert status in {'traded', 'not traded', 'all'}, f"Wrong input to the status argument, expected 'traded', 'not traded' or 'all', got {status}"
 
     assert lang in {'en', 'ru'}, f"Wrong input to the lang argument, expected 'en' or 'ru', got {lang}"
@@ -163,4 +169,3 @@ def trading_listing(engine:Union[str, List[str], np.ndarray]='stock', market:Uni
         data['|'.join([args['engine'][idx], args['market'][idx]])] = pd.concat(dfs).reset_index(drop=True)
 
     return data if len(data.keys()) > 1 else list(data.values())[0]
-
