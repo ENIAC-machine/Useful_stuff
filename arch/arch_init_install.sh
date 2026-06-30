@@ -2,6 +2,7 @@
 
 #source config
 source arch_install_cfg.conf
+source root_pwd.conf
 
 log_info() {
 	echo "[INFO] $*"
