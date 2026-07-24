@@ -10,8 +10,13 @@ sudo
 vim
 neovim
 nano
+
+#env
 git
 python
+docker
+podman
+openssh
 
 #Network
 networkmanager
@@ -20,12 +25,6 @@ iwctl
 #Manual
 man-db
 
-#GPU
-nvidia
-nvidia-utils
-lib32-nvidia-utils
-xf86-video-amdgpu
-xf86-video-intel
 
 #Audio
 mesa

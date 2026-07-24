@@ -1,0 +1,6 @@
+nvidia
+nvidia-open
+nvidia-utils
+nvidia-settings
+lib32-nvidia-utils
+nvidia-prime

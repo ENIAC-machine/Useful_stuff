@@ -1,0 +1,5 @@
+mesa
+lib32-mesa
+linux-firmware-amdgpu
+vulkan-radeon
+lib32-vulkan-radeon
