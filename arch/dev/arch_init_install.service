@@ -1,0 +1,15 @@
+[Unit]
+Description=Arch Initial Install (Tuning Script)
+After=systemd-udevd.service iwd.service
+Wants=iwd.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/bash /usr/local/bin/arch_init_install.sh
+WorkingDirectory=/usr/local/bin
+StandardOutput=journal+console
+StandardError=journal+console
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target

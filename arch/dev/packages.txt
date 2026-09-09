@@ -6,6 +6,9 @@ intel-ucode
 amd-ucode
 grub
 efibootmgr
+mkinitcpio
+btrfs-progs
+dosfstools
 sudo
 vim
 neovim
@@ -20,7 +23,6 @@ openssh
 
 #Network
 networkmanager
-iwctl
 
 #Manual
 man-db
