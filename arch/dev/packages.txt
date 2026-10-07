@@ -1,47 +1,100 @@
-#Base
+# Base / package management
 base
+pacman
+pacman-contrib
+archlinux-keyring
+arch-install-scripts
+
+# Kernel / microcode
 linux
 linux-firmware
 intel-ucode
 amd-ucode
+
+# Bootloader / initramfs
 grub
 efibootmgr
 mkinitcpio
-btrfs-progs
+os-prober
+
+# Filesystems / disk tools
 dosfstools
+e2fsprogs
+exfatprogs
+ntfs-3g
+mtools
+fuse3
+util-linux
+btrfs-progs
+
+# Core system / userland
+systemd
+systemd-sysvcompat
 sudo
+bash
+coreutils
+grep
+sed
+gawk
+findutils
+diffutils
+tar
+gzip
+xz
+zstd
+file
+which
+less
+bash-completion
+procps-ng
+
+# Editors / utilities
 vim
 neovim
 nano
+curl
+wget
+rsync
+unzip
+zip
+lsof
+psmisc
+pciutils
+usbutils
+htop
 
-#env
+# Development
 git
 python
-docker
+base-devel
+
+# Containers / remote
 podman
 openssh
 
-#Network
+# Network
 networkmanager
+wpa_supplicant
+iwd
+iproute2
+iputils
+wireless-regdb
+dhcpcd
 
-#Manual
+# Documentation
 man-db
+man-pages
 
-
-#Audio
+# Audio / graphics
 mesa
+vulkan-icd-loader
 pipewire
 pipewire-alsa
 pipewire-pulse
 wireplumber
+rtkit
+alsa-utils
 
-#KDE
-plasma-desktop
-sddm
-konsole
-dolphin
-
-#Fonts
-ttf-liberation
-firefox
+# Fonts / browser
 ttf-jetbrains-mono-nerd
+firefox

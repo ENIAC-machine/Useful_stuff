@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 set -Eeuo pipefail
 
@@ -7,16 +7,27 @@ source arch_install_cfg.conf
 source pwds.conf
 
 log_info() {
-	echo -e "\e[0;32m[INFO]\e[0;32m$*"
+	echo -e "\e[0;32m[INFO]\e[0m$*"
 }
 
 log_debug() {
-	echo -e "\e[0;33m[DEBUG]\e[0;33m$*"
+	echo -e "\e[0;33m[DEBUG]\e[0m$*"
 }
 
 load_packages() {
+	local file="$1"
 	local packages=($(grep -v '^#' $1))
-	pacstrap -K /mnt "${packages[@]}"
+
+	mapfile -t packages < <(
+		sed 's/\r$//' "$file" | 
+		grep -v '^[[:space:]]*#' | 
+		grep -v '^[[:space:]]*$'
+	)
+
+	#Ok, I know that it is against the arch philosophy to not use the -K flag
+	#but I would build LITERALLY THE SAME FILES
+	#except for mirrors probably (VERY debatable btw)
+	pacstrap -P /mnt "${packages[@]}"
 }
 
 log_debug "Config files loaded"
@@ -26,8 +37,17 @@ log_info "Starting..."
 #check sys
 cat /sys/firmware/efi/fw_platform_size
 
+#make it so that the name resolution will be outsourced to systemd-resolve
+cat > "/var/lib/iwd/main.conf" << EOF
+[General]
+EnableNetworkConfiguration=true
+
+[Network]
+NameResolvingService=systemd
+EOF
+
 if ! [ -n "$NETWORK_DEVICE" ]; then
-	NETWORK_DEVICE=$(iwctl device list | awk "NR==2 {print $2}")
+	NETWORK_DEVICE=$(iwctl device list | awk 'NR==2 {print $2}')
 fi
 
 log_debug "Available devices"
@@ -112,6 +132,7 @@ label: gpt
 size=$BOOT_SIZE, type=C12A7328-F81F-11D2-BA4B-00A0C93EC93B, name="efi"
 size=$SWAP_SIZE,   type=0657FD6D-A4AB-43C4-84E5-0933C84B4F4F, name="swap"
 size=$SYS_SIZE, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name="btrfs_root"
+size=$DATA_SYS_SIZE, type=0FC63DAF-8483-4772-8E79-3D69D8477DE4, name="tmp_data"
 EOF
 
 # Partition each HDD as a single ext4 data partition
@@ -129,10 +150,12 @@ if [[ "$SSD_DISK" =~ "nvme" ]]; then
     PART_BOOT="${SSD_DISK}p1"
     PART_SWAP="${SSD_DISK}p2"
     PART_BTRFS="${SSD_DISK}p3"
+    PART_DATA_STORAGE="${SSD_DISK}p4"
 else
     PART_BOOT="${SSD_DISK}1"
     PART_SWAP="${SSD_DISK}2"
     PART_BTRFS="${SSD_DISK}3"
+    PART_DATA_STORAGE="${SSD_DISK}4"
 fi
 
 
@@ -141,6 +164,7 @@ log_info "Formatting data..."
 mkfs.vfat -F 32 "/dev/$PART_BOOT"
 mkswap "/dev/$PART_SWAP"
 mkfs.btrfs -f "/dev/$PART_BTRFS"
+mkfs.xfs -f "/dev/$PART_DATA_STORAGE"
 
 # Format all HDD partitions as ext4
 DATA_PARTS=()
@@ -151,11 +175,9 @@ for DISK in "${OTHER_DISKS[@]}"; do
         PART_DATA="/dev/${DISK}1"
     fi
     DATA_PARTS+=("$PART_DATA")
-    mkfs.ext4 -F "$PART_DATA"
+    mkfs.xfs -f "$PART_DATA"
 done
 
-#Currently failing with mounting
-#TODO: fix
 log_info "Formatting finished, mounting..."
 
 swapon "/dev/$PART_SWAP"
@@ -240,7 +262,10 @@ rm -f /mnt/root/users.csv
 
 sync
 
+sleep 3
+
 log_info "Installation finished."
 
-reboot
+umount -R /mnt
 
+reboot
