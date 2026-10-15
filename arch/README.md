@@ -16,20 +16,20 @@ Where `{YOUR DISK}` is the disk corresponding to the flash drive, for example `/
 So basically I inject my custom scripts and their dependencies into the arch distro and rebuild
 the image from there. The tree looks something like:
 
-├── build_and_run.sh
-├── dev
-│   ├── amd_packages.txt
-│   ├── arch_chroot_script.sh
-│   ├── arch_init_install.service
-│   ├── arch_init_install.sh
-│   ├── arch_install_cfg.conf
-│   ├── intel_packages.txt
-│   ├── nvidia_packages.txt
-│   ├── packages.txt
-│   ├── pwds.conf
-│   └── users.csv
-├── Dockerfile
-├── image_write.sh
+├── build_and_run.sh\
+├── dev\
+│   ├── amd_packages.txt\
+│   ├── arch_chroot_script.sh\
+│   ├── arch_init_install.service\
+│   ├── arch_init_install.sh\
+│   ├── arch_install_cfg.conf\
+│   ├── intel_packages.txt\
+│   ├── nvidia_packages.txt\
+│   ├── packages.txt\
+│   ├── pwds.conf\
+│   └── users.csv\
+├── Dockerfile\
+├── image_write.sh\
 └── run_container.sh
 
 The **users.csv** file expects the following structure:
